@@ -73,3 +73,10 @@ Also comment the two lines mapping the snakeoil-certificates into the container:
 #      - ./ssl-cert-snakeoil.key:/etc/traefik/traefik.key
 #      - ./ssl-cert-snakeoil.pem:/etc/traefik/traefik.pem
 ```
+
+## Production use of letsencrypt
+By default the staging area of letsencrypt will be used when you restart the containers.
+
+If the staging area worked for you, comment the ``caServer`` line to
+use the production letsencrypt servers (warning: they have a rate
+limit) and restart the container.
