@@ -4,13 +4,13 @@
 # see: https://github.com/containous/traefik/blob/master/traefik.sample.toml
 
 # Enable debug mode, Default: false
-# debug = true
+debug = true
 
 # If connection to a SSL-Backend fails, skip the SSL-Verification:
 # InsecureSkipVerify = true
 
 # Loglevel, Default: "ERROR"
-# logLevel = "DEBUG"
+logLevel = "DEBUG"
 
 # Entrypoints, Default: ["http"]
 defaultEntryPoints = ["http", "https"]
@@ -24,23 +24,22 @@ defaultEntryPoints = ["http", "https"]
     [entryPoints.https]
     address = ":443"
        [entryPoints.https.tls]
-
 # use this with static SSL-certificates:
-#         [[entryPoints.https.tls.certificates]]
-#         certFile = "/etc/traefik/traefik.pem"
-#         keyFile = "/etc/traefik/traefik.key"
+         [[entryPoints.https.tls.certificates]]
+         certFile = "/etc/traefik/traefik.pem"
+         keyFile = "/etc/traefik/traefik.key"
 
 # letsencrypt configuration: 
-[acme]
-email = "mymail@example.com"
-storage = "/etc/traefik/acme/acme.json"
-entryPoint = "https"
-acmeLogging = true
-# for production use: uncomment this, delete the acme.json and restart 
-caServer = "https://acme-staging.api.letsencrypt.org/directory"
-[[acme.domains]]
-main = "schule.org"
-sans = ["server.schule.org","cloud.schule.org","moodle.schule.org"]
+# [acme]
+# email = "mymail@example.com"
+# storage = "/etc/traefik/acme/acme.json"
+# entryPoint = "https"
+# acmeLogging = true
+# # for production use: uncomment this, delete the acme.json and restart 
+# caServer = "https://acme-staging.api.letsencrypt.org/directory"
+# [[acme.domains]]
+# main = "schule.org"
+# sans = ["server.schule.org","cloud.schule.org","moodle.schule.org"]
 
 
 # Traefik logs

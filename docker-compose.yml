@@ -18,10 +18,11 @@ services:
       - ./traefik.toml:/etc/traefik/traefik.toml
       - ./acme:/etc/traefik/acme
       - ./access.log.txt:/tmp/access.log.txt
-#      - ./ssl-cert-snakeoil.key:/etc/traefik/traefik.key
-#      - ./ssl-cert-snakeoil.pem:/etc/traefik/traefik.pem
-    container_name: traefik
+# comment the next two lines to use letsencrypt
+      - ./ssl-cert-snakeoil.key:/etc/traefik/traefik.key
+      - ./ssl-cert-snakeoil.pem:/etc/traefik/traefik.pem
 
+# uncomment the next service to use a test webserver in a separate container
 #  whoami:
 #      image: emilevauge/whoami
 #      networks:
