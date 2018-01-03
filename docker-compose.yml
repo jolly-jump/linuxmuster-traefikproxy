@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  proxy:
+    image: traefik
+    restart: always
+    command: --web --docker --docker.domain=schule.org --logLevel=DEBUG
+#    command: --web --docker --docker.domain=schule.org
+#    command: --web
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./acme:/etc/traefik/acme
+      - ./access.log.txt:/tmp/access.log.txt
+#      - ./ssl-cert-snakeoil.key:/etc/traefik/traefik.key
+#      - ./ssl-cert-snakeoil.pem:/etc/traefik/traefik.pem
+    container_name: traefik
+
+#  whoami:
+#      image: emilevauge/whoami
+#      networks:
+#        - webgateway
+#      labels:
+#        - "traefik.backend=whoami"
+#        - "traefik.protocol=http"
+#        - "traefik.frontend.rule=Host:schule.org;Query: p=whoami"
+
+
+networks:
+  webgateway:
+      driver: bridge

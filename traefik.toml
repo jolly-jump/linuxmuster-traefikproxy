@@ -1,0 +1,119 @@
+################################################################
+# Global configuration
+################################################################
+# see: https://github.com/containous/traefik/blob/master/traefik.sample.toml
+
+# Enable debug mode, Default: false
+# debug = true
+
+# If connection to a SSL-Backend fails, skip the SSL-Verification:
+# InsecureSkipVerify = true
+
+# Loglevel, Default: "ERROR"
+# logLevel = "DEBUG"
+
+# Entrypoints, Default: ["http"]
+defaultEntryPoints = ["http", "https"]
+
+# Entrypoints definition
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+       [entryPoints.http.redirect]
+       entryPoint = "https"
+    [entryPoints.https]
+    address = ":443"
+       [entryPoints.https.tls]
+
+# use this with static SSL-certificates:
+#         [[entryPoints.https.tls.certificates]]
+#         certFile = "/etc/traefik/traefik.pem"
+#         keyFile = "/etc/traefik/traefik.key"
+
+# letsencrypt configuration: 
+[acme]
+email = "mymail@example.com"
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+acmeLogging = true
+# for production use: uncomment this, delete the acme.json and restart 
+caServer = "https://acme-staging.api.letsencrypt.org/directory"
+[[acme.domains]]
+main = "schule.org"
+sans = ["server.schule.org","cloud.schule.org","moodle.schule.org"]
+
+
+# Traefik logs
+# [traefikLog]
+# Enabled by default and log to stdout,Default: os.Stdout
+# filePath = "log/traefik.log"
+
+# Enable access logs
+# By default it will write to stdout and produce logs in the textual
+# Common Log Format (CLF), extended with additional fields.
+[accessLog]
+  filePath = "/tmp/access.log.txt"
+
+################################################################
+# File configuration backend
+################################################################
+
+[file]
+
+[backends]
+  [backends.schulkonsole]
+    [backends.schulkonsole.servers.server]
+    url = "https://server.schule.org:242"
+    weight = 10
+  [backends.horde]
+    [backends.horde.servers.server]
+    url = "https://server.schule.org:443"
+    weight = 10
+  [backends.cloud]
+    [backends.cloud.servers.server]
+    url = "https://cloud.schule.org:443"
+    weight = 10
+  [backends.moodle]
+    [backends.moodle.servers.server]
+    url = "https://moodle.schule.org:443"
+    weight = 10
+
+[frontends]
+  [frontends.schulkonsole]
+  backend = "schulkonsole"
+  passHostHeader = true
+    [frontends.schulkonsole.routes.schulkonsole-route]
+    rule = "Host: server.schule.org;PathPrefixStrip:/schulkonsole"
+
+  [frontends.horde]
+  backend = "horde"
+  passHostHeader = true
+    [frontends.horde.routes.horde-route]
+    rule = "Host: server.schule.org"
+
+  [frontends.cloud1]
+  backend = "cloud"
+  passHostHeader = true
+    [frontends.cloud1.routes.cloud-route]
+    rule = "Host: schule.org;PathPrefix:/cloud/"
+
+  [frontends.cloud2]
+  backend = "cloud"
+  passHostHeader = true
+    [frontends.cloud2.routes.cloud-route]
+    rule = "Host: cloud.schule.org"
+
+################################################################
+# Web configuration backend
+################################################################
+
+# Enable web configuration backend
+[web]
+
+################################################################
+# Docker configuration backend
+################################################################
+
+# Enable Docker configuration backend
+[docker]
+
